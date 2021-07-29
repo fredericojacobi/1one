@@ -1,6 +1,7 @@
 <?php
 require "../../../../api/models/Usuario.php";
 require "../../../../generics/Generics.php";
+require "../../../../generics/Constants.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $generics = new Generics();
@@ -18,13 +19,13 @@ switch ($method) {
             $_POST['Endereco'],
             $_POST['Telefone']);
 
-        $url = 'http://localhost:80/usuario.php';
+        $url = Constants::API_URL . "usuario.php";
         return $generics->PostMethod($url, $usuarioModel);
 
     case 'GET':
         if(empty($_GET))
             $generics->Redirect("/cadastro");
-        $url = "http://localhost:80/usuario.php?id=" . $_GET['id'];
+        $url = Constants::API_URL . "usuario.php?id=" . $_GET['id'];
         echo $generics->GetMethod($url);
         return;
 }

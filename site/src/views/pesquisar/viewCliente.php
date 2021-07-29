@@ -18,11 +18,11 @@ switch ($method) {
             $_POST['ValorDesejado'],
             $_POST['DataExpiracao']);
 
-        $url = 'http://localhost:80/servico.php';
+        $url = Constants::API_URL . 'servico.php';
         return $generics->PostMethod($url, $servicoModel);
 
     case 'GET':
-        $url = "http://localhost:80/servico.php";
+        $url = Constants::API_URL . "servico.php";
         echo $generics->GetMethod($url);
         return;
 }
