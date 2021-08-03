@@ -15,6 +15,9 @@ CREATE TABLE Servico
 );
 
 INSERT INTO Servico (Id_Usuario, Id_TipoServico, Titulo, DescricaoCurta, DescricaoLonga, ValorDesejado, DataExpiracao)
-VALUES (1, 1, 'Consertar Samsung S20', 'Tela quebrada', 'Caiu a tela no chao e preciso trocar o display inteiro', 200, '2021-08-02'),
-       (9, 4, 'Consertar Apple SE', 'Wifi nao funciona', 'Antena de wifi parou de funcionar de repente', 120, '2021-08-05'),
-       (7, 3, 'Consertar LG Gram', 'Entrada USB nao funciona', 'Quando reiniciei parou de funcionar uma das entradas USB', 400, '2021-08-02');
+VALUES (1, 1, 'Consertar Samsung S20', 'Tela quebrada', 'Caiu a tela no chao e preciso trocar o display inteiro', 200,
+        '2021-08-02'),
+       (2, 4, 'Consertar Apple SE', 'Wifi nao funciona', 'Antena de wifi parou de funcionar de repente', 120,
+        '2021-08-05'),
+       (3, 3, 'Consertar LG Gram', 'Entrada USB nao funciona',
+        'Quando reiniciei parou de funcionar uma das entradas USB', 400, '2021-08-02');

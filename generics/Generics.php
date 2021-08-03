@@ -1,6 +1,6 @@
 <?php
 require_once "/Users/fredericojacobi/Projetos/1onePHP/api/config/Database.php";
-require_once "/Users/fredericojacobi/Projetos/1onePHP/generics/Constants.php";
+//require "/Users/fredericojacobi/Projetos/1onePHP/generics/Constants.php";
 
 class Generics
 {
@@ -132,18 +132,40 @@ class Generics
     public function GetMethod($url)
     {
         if (empty($url)) {
-
+            echo json_encode([
+               'Message' => 'Url nao encontrada'
+            ]);
         } else {
             $curl = curl_init($url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            // ** HEADERS **
 //            curl_setopt($curl, CURLOPT_HTTPHEADER, [
-//                'X-RapidAPI-Host: kvstore.p.rapidapi.com',
-//                'X-RapidAPI-Key: 7xxxxxxxxxxxxxxxxxxxxxxx',
 //                'Content-Type: application/json'
 //            ]);
             $response = curl_exec($curl);
             curl_close($curl);
-            echo $response;
+            echo $response . PHP_EOL;
+        }
+    }
+
+    public function PutMethod($url, $usuarioModel){
+        if(empty($url)){
+            echo json_encode([
+               'Message' => 'Url nao encontrada'
+            ]);
+        } else {
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($curl, CURLOPT_POSTFIELDS,  json_encode($usuarioModel));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+//                'X-RapidAPI-Host: kvstore.p.rapidapi.com',
+//                'X-RapidAPI-Key: 7xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                'Content-Type: application/json'
+            ]);
+            $response = curl_exec($curl);
+            curl_close($curl);
+            echo $response . PHP_EOL;
         }
     }
 }

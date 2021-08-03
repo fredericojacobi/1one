@@ -4,6 +4,7 @@ require "../../../../" . Constants::API_CONFIG . "Configuration.php";
 require "../../../../" . Constants::SITE_HEADER;
 ?>
 <script src="../../js/cadastro/cadastro.js"></script>
+<script src="../../js/generic/genericFunctions.js"></script>
 </head>
 <body>
 <?php require "../../../../" . Constants::SITE_MENU ?>
@@ -80,6 +81,42 @@ require "../../../../" . Constants::SITE_HEADER;
                     </div>
                 </div>
                 <hr class="m-0 mb-3">
+                <div class="h5">Dados de Login</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="float-Email"
+                                   placeholder="Seu email aqui..." required>
+                            <label for="float-Email">Email</label>
+                            <div class="invalid-feedback">
+                                Favor inserir o seu email.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="float-Senha"
+                                   placeholder="Sua senha aqui..." required>
+                            <label for="float-Senha">Senha</label>
+                            <div class="invalid-feedback">
+                                Favor inserir a sua senha.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="float-ConfirmarSenha"
+                                   placeholder="Sua senha aqui..." required>
+                            <label for="float-Confirmarsenha">Confirmar Senha</label>
+                            <div class="invalid-feedback">
+                                Favor inserir a confirmação de senha.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="m-0 mb-3">
                 <div class="h5">Documentos</div>
                 <div class="row">
                     <div class="col-md-6">
@@ -129,7 +166,8 @@ require "../../../../" . Constants::SITE_HEADER;
         $('#birth-date').mask('00/00/0000');
         $('#float-Cpf').mask('000.000.000-00');
         $('#float-Telefone').mask('(00)00000-0000');
-
+        var params = GetQueryStringParams();
+        checarEdicaoCadastro(params.id);
         (function () {
             'use strict'
             var forms = document.querySelectorAll('.needs-validation');
@@ -140,13 +178,11 @@ require "../../../../" . Constants::SITE_HEADER;
                             event.preventDefault();
                             event.stopPropagation();
                         } else
-                            cadastrarUsuario();
+                            cadastrarUsuario(params.id);
                         form.classList.add('was-validated');
                     }, false)
                 })
         })()
-        var params = Object.fromEntries(new URLSearchParams(window.location.search).entries());
-        checarEdicaoCadastro(params.id);
     });
 </script>
 

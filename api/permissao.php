@@ -6,8 +6,8 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 require "./config/Database.php";
-require_once "./Models/Servico.php";
-require_once "./bll/ServicoBL.php";
+require_once "./Models/Permissao.php";
+require_once "./bll/PermissaoBL.php";
 require_once "../generics/Constants.php";
 require_once "../generics/Generics.php";
 
@@ -19,30 +19,26 @@ $errorArray = [];
 $method = $_SERVER['REQUEST_METHOD'];
 (isset($_GET['id'])) ? $id = intval($_GET['id']) : $id = null;
 
-$servicoBL = new ServicoBL($database);
+$permissaoBL = new PermissaoBL($database);
 switch ($method) {
     case 'POST':
         $postData = json_decode(file_get_contents("php://input"), true);
         if(is_null($postData)){
             http_response_code(400);
             echo json_encode([
-                'error' => 'erro em servico'
+                'error' => 'erro em permissao'
             ]);
             return;
         }
-        $servico = new Servico(
-            $postData['id_Usuario'],
-            $postData['id_TipoServico'],
-            $postData['titulo'],
-            $postData['descricaoCurta'],
-            $postData['descricaoLonga'],
-            $postData['valorDesejado'],
-            $postData['dataExpiracao'],
+        $permissao = new Permissao(
+            $postData['nome'],
+            $postData['nivel'],
+            $postData['categoria'],
         );
-        $return = $servicoBL->Create($servico);
+        $return = $permissaoBL->Create($permissao);
         if (is_numeric($return)){
             http_response_code(200);
-            echo json_encode($servicoBL->Read($return)[0]);
+            echo json_encode($permissaoBL->Read($return)[0]);
         }
         else{
             http_response_code(400);
@@ -51,14 +47,14 @@ switch ($method) {
         return;
 
     case 'GET':
-        echo json_encode($servicoBL->Read($id));
+        echo json_encode($permissaoBL->Read($id));
         break;
 
     case 'PUT':
         parse_str(file_get_contents('php://input'), $postData);
         if (is_null($postData) || empty($postData)) {
             http_response_code(400);
-            echo json_encode(array("message" => Constants::REQUEST_NO_BODY));
+            echo json_encode(["message" => Constants::REQUEST_NO_BODY]);
         }
         foreach ($postData as $key => $value){
             if ( isset($value) || empty($value) || is_null($value)){
@@ -68,17 +64,20 @@ switch ($method) {
         if(count($errorArray) > 0){
             $implodeError = implode(", ", $errorArray);
             http_response_code(400);
-            echo json_encode(array("message" => Constants::REQUEST_FIELD_ERROR . $implodeError));
+            echo json_encode(["message" => Constants::REQUEST_FIELD_ERROR . $implodeError]);
         }
-        $servico = new Servico(
-            $postData['id']
+        $permissao = new Permissao(
+            $postData['id'],
+            $postData['nome'],
+            $postData['nivel'],
+            $postData['categoria'],
         );
-        $return = $servicoBL->Update($servico);
+        $return = $permissaoBL->Update($permissao);
         if (!$return)
             http_response_code(500);
         else
             http_response_code(200);
-        echo json_encode(array("message" => Constants::REQUEST_SUCCESS));
+        echo json_encode(["message" => Constants::REQUEST_SUCCESS]);
         return $return;
 
     case 'DELETE':

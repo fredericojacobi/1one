@@ -20,7 +20,8 @@ function checarEdicaoCadastro(id){
                 $('#float-AntecedentesCriminais').val(dados.AntecedentesCriminais);
                 $('#float-DocumentoCPF').val(dados.DocumentoCPF);
                 $('#float-TipoUsuario').val(dados.TipoUsuario);
-
+                $('#float-Email').val(dados.Email);
+                $('#float-Senha').val(dados.Senha);
             },
             error: function (data) {
                 var dados = JSON.parse(data.responseText);
@@ -32,11 +33,12 @@ function checarEdicaoCadastro(id){
         $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Cadastrar</button>');    }
 }
 
-function cadastrarUsuario(){
+function cadastrarUsuario(id){
     $.ajax({
         method: "POST",
         url: "viewCadastro.php",
         data: {
+            'Id' : id,
             'Nome': $('#float-Nome').val(),
             'Sobrenome': $('#float-Sobrenome').val(),
             'DataNascimento': $('#float-DataNascimento').val(),
@@ -45,19 +47,22 @@ function cadastrarUsuario(){
             'Cpf': $('#float-Cpf').val(),
             'AntecedentesCriminais': $('#float-AntecedentesCriminais').val(),
             'DocumentoCPF': $('#float-DocumentoCPF').val(),
-            'TipoUsuario': $('#float-TipoUsuario').val()
+            'TipoUsuario': $('#float-TipoUsuario').val(),
+            'Email' : $('#float-Email').val(),
+            'Senha' : $('#float-Senha').val(),
+            'ConfirmarSenha' : $('#float-ConfirmarSenha').val()
         },
         success: function (data) {
-            console.log(data)
             var dados = JSON.parse(data);
-            console.log(dados);
-            console.log("Sucesso");
+            // console.log(dados);
+            // console.log("Sucesso");
         },
         error: function (data) {
-            console.log(data)
             var dados = JSON.parse(data.responseText);
+            console.log(data)
             console.log(dados)
             console.log("Erro");
+            stop()
         }
     });
 }

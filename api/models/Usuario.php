@@ -14,7 +14,11 @@ class Usuario extends ObjectBase
         $cpf,
         $tipoUsuario,
         $telefone,
-        $verificado;
+        $verificado,
+        $email,
+        $senha,
+        $ativo,
+        $permissao;
 
 
     public function __construct($nome,
@@ -24,6 +28,9 @@ class Usuario extends ObjectBase
                                 $tipoUsuario,
                                 $endereco,
                                 $telefone,
+                                $email,
+                                $senha,
+                                $ativo = false,
                                 $verificado = false)
     {
         $this->nome = $nome;
@@ -33,9 +40,15 @@ class Usuario extends ObjectBase
         $this->tipoUsuario = $tipoUsuario;
         $this->endereco = $endereco;
         $this->telefone = $telefone;
-        if(empty($verificado))
+        $this->email = $email;
+        $this->senha = $senha;
+        if(empty($ativo))
+            $this->ativo = 0;
+        else
+            $this->ativo = $ativo;
+        if (empty($verificado))
             $this->verificado = 0;
         else
-        $this->verificado = $verificado;
+            $this->verificado = $verificado;
     }
 }

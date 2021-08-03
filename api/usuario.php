@@ -23,7 +23,7 @@ $usuarioBL = new UsuarioBL($database);
 switch ($method) {
     case 'POST':
         $postData = json_decode(file_get_contents("php://input"), true);
-        if(is_null($postData)){
+        if (is_null($postData)) {
             http_response_code(400);
             echo json_encode([
                 'error' => Constants::REQUEST_WRONG_BODY
@@ -38,14 +38,15 @@ switch ($method) {
             $postData['tipoUsuario'],
             $postData['endereco'],
             $postData['telefone'],
-            $postData['verificado']
+            $postData['email'],
+            $postData['senha'],
+            isset($postData['ativo']) ? $postData['ativo'] : false
         );
         $return = $usuarioBL->Create($usuario);
-        if (is_numeric($return)){
+        if (is_numeric($return)) {
             http_response_code(200);
             echo json_encode($usuarioBL->Read($return)[0]);
-        }
-        else{
+        } else {
             http_response_code(400);
             echo json_encode($return);
         }
@@ -56,36 +57,38 @@ switch ($method) {
         break;
 
     case 'PUT':
-        parse_str(file_get_contents('php://input'), $postData);
+        $postData = json_decode(file_get_contents("php://input"), true);
         if (is_null($postData) || empty($postData)) {
             http_response_code(400);
             echo json_encode(array("message" => Constants::REQUEST_NO_BODY));
         }
-        foreach ($postData as $key => $value){
-            if ( isset($value) || empty($value) || is_null($value)){
-                array_push($errorArray);
-            }
-        }
-        if(count($errorArray) > 0){
-            $implodeError = implode(", ", $errorArray);
+        if (!isset($postData['id']) || is_null($postData['id'])) {
             http_response_code(400);
-            echo json_encode(array("message" => Constants::REQUEST_FIELD_ERROR . $implodeError));
+            echo json_encode(array("message" => Constants::REQUEST_NO_ID));
         }
+
         $usuario = new Usuario(
-            $postData['id'],
             $postData['nome'],
             $postData['sobrenome'],
-            $postData['cpf'],
             $postData['dataNascimento'],
-            $postData['tipoUsuario']
+            $postData['cpf'],
+            $postData['tipoUsuario'],
+            $postData['endereco'],
+            $postData['telefone'],
+            $postData['verificado']
         );
+        $usuario->id = $postData['id'];
         $where = "id = {$postData['id']}";
         $return = $usuarioBL->Update($usuario, $where);
-        if (!$return)
+        if (!$return){
             http_response_code(500);
+        }
         else
             http_response_code(200);
-            echo json_encode(array("message" => Constants::REQUEST_SUCCESS));
+        if (!is_bool($return))
+           echo $return;
+        else
+            echo json_encode(["message" => Constants::REQUEST_SUCCESS]);
         return $return;
 
     case 'DELETE':
