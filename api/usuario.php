@@ -45,7 +45,7 @@ switch ($method) {
         $return = $usuarioBL->Create($usuario);
         if (is_numeric($return)) {
             http_response_code(200);
-            echo json_encode($usuarioBL->Read($return)[0]);
+            echo json_encode($usuarioBL->Read($return));
         } else {
             http_response_code(400);
             echo json_encode($return);
@@ -60,11 +60,11 @@ switch ($method) {
         $postData = json_decode(file_get_contents("php://input"), true);
         if (is_null($postData) || empty($postData)) {
             http_response_code(400);
-            echo json_encode(array("message" => Constants::REQUEST_NO_BODY));
+            echo json_encode(["message" => Constants::REQUEST_NO_BODY, "status" => "0"]);
         }
         if (!isset($postData['id']) || is_null($postData['id'])) {
             http_response_code(400);
-            echo json_encode(array("message" => Constants::REQUEST_NO_ID));
+            echo json_encode(["message" => Constants::REQUEST_NO_ID, "status" => "0"]);
         }
 
         $usuario = new Usuario(
@@ -75,6 +75,9 @@ switch ($method) {
             $postData['tipoUsuario'],
             $postData['endereco'],
             $postData['telefone'],
+            $postData['email'],
+            $postData['senha'],
+            $postData['ativo'],
             $postData['verificado']
         );
         $usuario->id = $postData['id'];
@@ -82,13 +85,14 @@ switch ($method) {
         $return = $usuarioBL->Update($usuario, $where);
         if (!$return){
             http_response_code(500);
+            echo json_encode(["message" => Constants::REQUEST_ERROR, "status" => "0"]);
         }
         else
             http_response_code(200);
         if (!is_bool($return))
-           echo $return;
+           echo json_encode(["message" => $return, "status" => "0"]);
         else
-            echo json_encode(["message" => Constants::REQUEST_SUCCESS]);
+            echo json_encode(["message" => Constants::REQUEST_SUCCESS, "status" => "1"]);
         return $return;
 
     case 'DELETE':

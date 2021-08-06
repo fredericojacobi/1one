@@ -1,5 +1,4 @@
 <?php
-require "/Users/fredericojacobi/Projetos/1onePHP/generics/Constants.php";
 include_once "Configuration.php";
 
 /**
@@ -15,7 +14,6 @@ class Database extends PDO
 
     public function __construct()
     {
-
     }
 
     public function getConnection(): PDO
@@ -34,7 +32,6 @@ class Database extends PDO
 
     public function Insert(string $query)
     {
-
         $this->database = $this->getConnection();
         try {
             $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -60,16 +57,15 @@ class Database extends PDO
         try {
             $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->database->beginTransaction();
-            $this->exec($query);
+            $return = $this->database->exec($query);
             $this->database->commit();
         } catch (PDOException $pdoException) {
             $this->database->rollBack();
-            return json_encode(array(
+            return json_encode([
                 "errorCode" => $pdoException->getCode(),
                 "message" => $pdoException->getMessage(),
-                "file" => $pdoException->getFile()));
+                "file" => $pdoException->getFile()]);
         } finally {
-
         }
         return true;
     }
@@ -81,13 +77,12 @@ class Database extends PDO
 
         } catch (PDOException $pdoException) {
             $this->database->rollBack();
-            return json_encode(array(
+            return json_encode([
                 "errorCode" => $pdoException->getCode(),
                 "message" => $pdoException->getMessage(),
-                "file" => $pdoException->getFile()));
+                "file" => $pdoException->getFile()]);
         } finally {
 
         }
-
     }
 }

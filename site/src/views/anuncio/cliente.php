@@ -3,7 +3,7 @@ require "../../../../generics/Constants.php";
 require "../../../../" . Constants::API_CONFIG . "Configuration.php";
 require "../../../../" . Constants::SITE_HEADER;
 ?>
-<script src="../../js/pesquisar/cliente.js"></script>
+<script src="../../js/anuncio/anuncio.js"></script>
 </head>
 
 <body>

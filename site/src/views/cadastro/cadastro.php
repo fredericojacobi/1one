@@ -93,15 +93,18 @@ require "../../../../" . Constants::SITE_HEADER;
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6" id="confirmarSenha"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="float-Senha"
+                                   minlength="6"
+                                   maxlength="20"
                                    placeholder="Sua senha aqui..." required>
                             <label for="float-Senha">Senha</label>
                             <div class="invalid-feedback">
-                                Favor inserir a sua senha.
+                                <span id="senha"></span>
                             </div>
                         </div>
                     </div>
@@ -111,7 +114,7 @@ require "../../../../" . Constants::SITE_HEADER;
                                    placeholder="Sua senha aqui..." required>
                             <label for="float-Confirmarsenha">Confirmar Senha</label>
                             <div class="invalid-feedback">
-                                Favor inserir a confirmação de senha.
+                                Senhas diferentes!
                             </div>
                         </div>
                     </div>
@@ -154,7 +157,7 @@ require "../../../../" . Constants::SITE_HEADER;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 buttonSubmit"></div>
+                    <div class="col-md-12 buttonSubmit text-center"></div>
                 </div>
             </div>
         </div>
@@ -163,27 +166,52 @@ require "../../../../" . Constants::SITE_HEADER;
 </body>
 <script type="text/javascript">
     $('document').ready(function () {
-        $('#birth-date').mask('00/00/0000');
-        $('#float-Cpf').mask('000.000.000-00');
-        $('#float-Telefone').mask('(00)00000-0000');
-        var params = GetQueryStringParams();
-        checarEdicaoCadastro(params.id);
-        (function () {
-            'use strict'
-            var forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        } else
-                            cadastrarUsuario(params.id);
-                        form.classList.add('was-validated');
-                    }, false)
-                })
-        })()
-    });
+            $('#birth-date').mask('00/00/0000');
+            $('#float-Cpf').mask('000.000.000-00');
+            $('#float-Telefone').mask('(00)00000-0000');
+            var params = pegaQueryString();
+            checarEdicaoCadastro(params.id);
+
+            $('#float-Senha').on('keypress', function(){
+                (contagemCaracter('float-Senha'))
+            });
+
+            var senha = document.getElementById("float-Senha")
+                , confirmarSenha = document.getElementById("float-ConfirmarSenha");
+            function checarSenha() {
+                if(checarTamanhoSenha(senha.value) == false){
+                    $('#senha').text('Senha muito pequena.');
+                    senha.setCustomValidity('Tamanho da senha incorreto.');
+                } else {
+                    $('#senha').text('Senha muito grande.');
+                    senha.setCustomValidity('');
+                    if (senha.value != confirmarSenha.value) {
+                        confirmarSenha.setCustomValidity('Senhas diferentes!');
+                    } else {
+                        confirmarSenha.setCustomValidity('');
+                    }
+                }
+            }
+
+            (function () {
+                'use strict'
+                var forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms)
+                    .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            checarSenha()
+                            if (!form.checkValidity()) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            } else
+                                cadastrarUsuario(params.id);
+                            form.classList.add('was-validated');
+                        }, false)
+                    })
+            })()
+        }
+    )
+    ;
 </script>
 
 <?php require "../../../../" . Constants::SITE_FOOTER ?>

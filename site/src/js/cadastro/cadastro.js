@@ -1,16 +1,15 @@
-function checarEdicaoCadastro(id){
-    if(id){
+function checarEdicaoCadastro(id) {
+    if (id) {
         $('.title').append("Atualização de Dados Cadastrais");
         $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Atualizar</button>');
         $.ajax({
             method: "GET",
             url: "viewCadastro.php",
             data: {
-                'id' : id
+                'id': id
             },
             success: function (data) {
                 var dados = JSON.parse(data);
-                dados = dados[0];
                 $('#float-Nome').val(dados.Nome);
                 $('#float-Sobrenome').val(dados.Sobrenome);
                 $('#float-DataNascimento').val(dados.DataNascimento);
@@ -21,24 +20,33 @@ function checarEdicaoCadastro(id){
                 $('#float-DocumentoCPF').val(dados.DocumentoCPF);
                 $('#float-TipoUsuario').val(dados.TipoUsuario);
                 $('#float-Email').val(dados.Email);
-                $('#float-Senha').val(dados.Senha);
+                $('#confirmarSenha').append('<div class="form-floating mb-3">' +
+                    '                            <input type="password" class="form-control" id="float-SenhaAtual"' +
+                    '                                   placeholder="Sua senha aqui..." required>' +
+                    '                            <label for="float-SenhaAtual">Senha atual</label>' +
+                    '                            <div class="invalid-feedback">' +
+                    '                                Favor inserir a sua senha atual.' +
+                    '                            </div>' +
+                    '                        </div>');
             },
             error: function (data) {
                 var dados = JSON.parse(data.responseText);
+                console.log(dados);
+                stop();
             }
         });
-    }
-    else{
+    } else {
         $('.title').append("Cadastro");
-        $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Cadastrar</button>');    }
+        $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Cadastrar</button>');
+    }
 }
 
-function cadastrarUsuario(id){
+function cadastrarUsuario(id) {
     $.ajax({
         method: "POST",
         url: "viewCadastro.php",
         data: {
-            'Id' : id,
+            'Id': id,
             'Nome': $('#float-Nome').val(),
             'Sobrenome': $('#float-Sobrenome').val(),
             'DataNascimento': $('#float-DataNascimento').val(),
@@ -48,21 +56,28 @@ function cadastrarUsuario(id){
             'AntecedentesCriminais': $('#float-AntecedentesCriminais').val(),
             'DocumentoCPF': $('#float-DocumentoCPF').val(),
             'TipoUsuario': $('#float-TipoUsuario').val(),
-            'Email' : $('#float-Email').val(),
-            'Senha' : $('#float-Senha').val(),
-            'ConfirmarSenha' : $('#float-ConfirmarSenha').val()
+            'Email': $('#float-Email').val(),
+            'SenhaAtual': $('#float-SenhaAtual').val(),
+            'Senha': $('#float-Senha').val(),
+            'ConfirmarSenha': $('#float-ConfirmarSenha').val()
         },
         success: function (data) {
             var dados = JSON.parse(data);
-            // console.log(dados);
-            // console.log("Sucesso");
+            if (dados.status) {
+                alert("Dados atualizados com sucesso!");
+            } else{
+                alert(dados.message);
+                // console.log(dados);
+                $('#float-SenhaAtual').val(null);
+            }
         },
         error: function (data) {
-            var dados = JSON.parse(data.responseText);
-            console.log(data)
-            console.log(dados)
-            console.log("Erro");
-            stop()
+            stop();
+            console.log(data);
+            var dados = JSON.parse(data);
+            alert(dados.message);
+            console.log(dados);
+            $('#float-SenhaAtual').val(null);
         }
     });
 }

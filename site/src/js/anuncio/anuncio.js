@@ -82,22 +82,23 @@ function montarCardCliente(dados) {
         var idServico = servico.Id;
         console.log(servico.ValorDesejado)
         var card =
-            " <div class='card m-2 p-1' style='width: 20rem;'>" +
-            "<a href='/cadastro' style='text-decoration: none; color: inherit'><input type='text' value='" + idServico + "' hidden> "
+            " <div class='card one-card-size m-2 p-1' style=''>" +
+            "<a href='/anuncio/detalhes?id=" + idServico + "' style='text-decoration: none; color: inherit'><input type='text' value='" + idServico + "' hidden> "
             + "<div class='card-body p-1'>"
-            + "<h5 class='card-title'>" + titulo + "</h5>"
-            + "<div class='card-body'>"
+            + "<h5 class='card-title text-center'>" + titulo + "</h5>"
+            + "<div class='card-body one-card-body p-1'>"
             + "<p class='card-text'>"
             + texto
             + "</p>"
             + "</div>"
-            + "<div class='d-flex justify-content-end'>"
-            + selecionarIconeAvaliacao(10)
+            + "<div class='card-body p-0'>"
+            + "<div class='d-flex justify-content-start'>"
+            +       selecionarIconeAvaliacao(10)
             + "</div>"
-            + "<div class='d-flex'>"
-            + "<small class='text-muted flex-fill mr-5'>Adicionado " + dataCadastro + "</small>"
             + "<div class=''>"
-            + selecionarIconePreco(valorDesejado)
+            +       selecionarIconePreco(valorDesejado)
+            + "     <small class='ms-1'>Adicionado " + dataCadastro + "</small>"
+            + "</div>"
             + "</div>"
             + "</div>"
             + "</div>"

@@ -6,10 +6,14 @@
     width: 300px;
 }
 
-.one-card-group {
-
+.one-card-size {
+    width: 320px;
+    height: 200px;
 }
 
+.one-card-body {
+    height: 6.2rem;
+}
 .one-mr-ml-auto {
     margin-left: auto;
     margin-right: auto;
