@@ -69,10 +69,10 @@ class UsuarioBL
         }
     }
 
-    public function Update(Usuario $usuario, string $where = null, string $tableName = Tables::USUARIO)
+    public function Update(Usuario $usuario)
     {
-        if (is_null($where))
-            $where = " Id = $usuario->id";
+        $tableName = Tables::USUARIO;
+        $where = " Id = $usuario->id";
         unset($usuario->dataCadastro);
         $dateTime = new DateTime('now');
         $dateTime->setTimezone(new DateTimeZone('America/Sao_Paulo'));
@@ -92,5 +92,35 @@ class UsuarioBL
             ";
 
         return $this->database->Update($query);
+    }
+
+    public function Desativar(Usuario $usuario)
+    {
+        $query = "UPDATE " . Tables::USUARIO . "
+                  SET Ativo = 0
+                  WHERE Id = $usuario->id";
+        return $this->database->Delete($query);
+    }
+
+    public function Login(Usuario $usuario)
+    {
+        $query = "SELECT * FROM " . Tables::USUARIO . "
+                  WHERE Email = '$usuario->email'
+                  AND   Senha = '$usuario->senha'";
+
+        try {
+            $this->database = $this->database->getConnection();
+            $stmt = $this->database->prepare($query);
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return (empty($rows)) ? false : $rows[0];
+        } catch (PDOException $exception) {
+            $this->database->rollBack();
+            return [
+                "status" => 500,
+                "errorCode" => $exception->getCode(),
+                "message" => $exception->getMessage(),
+                "file" => $exception->getFile()];
+        }
     }
 }

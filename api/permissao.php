@@ -15,7 +15,6 @@ $database = new Database();
 $database->getConnection();
 $functions = new Generics();
 $errorArray = [];
-//$constants = new Constants();
 $method = $_SERVER['REQUEST_METHOD'];
 (isset($_GET['id'])) ? $id = intval($_GET['id']) : $id = null;
 
@@ -23,7 +22,7 @@ $permissaoBL = new PermissaoBL($database);
 switch ($method) {
     case 'POST':
         $postData = json_decode(file_get_contents("php://input"), true);
-        if(is_null($postData)){
+        if (is_null($postData)) {
             http_response_code(400);
             echo json_encode([
                 'error' => 'erro em permissao'
@@ -36,11 +35,10 @@ switch ($method) {
             $postData['categoria'],
         );
         $return = $permissaoBL->Create($permissao);
-        if (is_numeric($return)){
+        if (is_numeric($return)) {
             http_response_code(200);
             echo json_encode($permissaoBL->Read($return)[0]);
-        }
-        else{
+        } else {
             http_response_code(400);
             echo json_encode($return);
         }
@@ -56,12 +54,12 @@ switch ($method) {
             http_response_code(400);
             echo json_encode(["message" => Constants::REQUEST_NO_BODY]);
         }
-        foreach ($postData as $key => $value){
-            if ( isset($value) || empty($value) || is_null($value)){
+        foreach ($postData as $key => $value) {
+            if (isset($value) || empty($value) || is_null($value)) {
                 array_push($errorArray);
             }
         }
-        if(count($errorArray) > 0){
+        if (count($errorArray) > 0) {
             $implodeError = implode(", ", $errorArray);
             http_response_code(400);
             echo json_encode(["message" => Constants::REQUEST_FIELD_ERROR . $implodeError]);
@@ -81,8 +79,14 @@ switch ($method) {
         return $return;
 
     case 'DELETE':
-
-        break;
+        if (!$id) {
+            http_response_code(404);
+            echo json_encode(["message" => Constants::REQUEST_USER_NOT_FOUND, "status" => 0]);
+        }
+        $usuario = new Usuario("", "", "", "", "", "", "", "", "");
+        $usuario->id = $id;
+        echo $usuarioBL->Desativar($usuario);
+        return;
 }
 
 

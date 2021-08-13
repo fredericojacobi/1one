@@ -85,4 +85,23 @@ class Database extends PDO
 
         }
     }
+
+    public function Delete(string $sql)
+    {
+        $this->database = $this->getConnection();
+        try {
+            $this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->database->beginTransaction();
+            $this->database->exec($sql);
+            $this->database->commit();
+        } catch (PDOException $pdoException) {
+            $this->database->rollBack();
+            return [
+                "errorCode" => $pdoException->getCode(),
+                "message" => $pdoException->getMessage(),
+                "file" => $pdoException->getFile()];
+        } finally {
+
+        }
+    }
 }

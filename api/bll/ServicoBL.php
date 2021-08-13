@@ -51,7 +51,7 @@ class ServicoBL
             $stmt = $database->getConnection()->prepare($sql);
             $stmt->execute(['id' => $id]);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $rows;
+            return (count($rows) > 1) ? $rows : $rows[0];
         } catch (PDOException $exception) {
             $this->database->rollBack();
             return [

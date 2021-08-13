@@ -62,12 +62,14 @@ function cadastrarUsuario(id) {
             'ConfirmarSenha': $('#float-ConfirmarSenha').val()
         },
         success: function (data) {
+            stop();
+                console.log(data);
             var dados = JSON.parse(data);
             if (dados.status) {
                 alert("Dados atualizados com sucesso!");
             } else{
-                alert(dados.message);
-                // console.log(dados);
+                console.log(data);
+                stop();
                 $('#float-SenhaAtual').val(null);
             }
         },
@@ -75,8 +77,6 @@ function cadastrarUsuario(id) {
             stop();
             console.log(data);
             var dados = JSON.parse(data);
-            alert(dados.message);
-            console.log(dados);
             $('#float-SenhaAtual').val(null);
         }
     });

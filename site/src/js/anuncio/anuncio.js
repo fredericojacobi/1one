@@ -1,3 +1,67 @@
+function cadastrarAnuncio(){
+    $.ajax({
+        method: "POST",
+        url: "viewCliente.php",
+        data: {
+            'Titulo': $('#float-Titulo').val(),
+            'DescricaoCurta': $('#float-DescricaoCurta').val(),
+            'DescricaoLonga': $('#float-DescricaoLonga').val(),
+            'ValorDesejado': $('#float-ValorDesejado').val(),
+            'DataExpiracao': $('#float-DataExpiracao').val()
+        },
+        success: function (data) {
+            alert(data);
+            var dados = JSON.parse(data);
+            if (dados.status) {
+                alert("Dados atualizados com sucesso!");
+            } else{
+                alert(dados.message);
+                console.log(dados);
+                $('#float-SenhaAtual').val(null);
+            }
+        },
+        error: function (data) {
+            stop();
+            console.log(data);
+            var dados = JSON.parse(data);
+            alert(dados.message);
+            console.log(dados);
+            $('#float-SenhaAtual').val(null);
+        }
+    });
+}
+
+function checarEdicaoCadastro(id) {
+    if (id) {
+        $('.title').append("Atualização do Anúncio");
+        $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Atualizar</button>');
+        $.ajax({
+            method: "GET",
+            url: "viewCliente.php",
+            data: {
+                'id': id
+            },
+            success: function (data) {
+                var dados = JSON.parse(data);
+                console.log(dados);
+                $('#float-Titulo').val(dados.Titulo);
+                $('#float-DescricaoCurta').val(dados.DescricaoCurta);
+                $('#float-DescricaoLonga').val(dados.DescricaoLonga);
+                $('#float-ValorDesejado').val(dados.ValorDesejado);
+                $('#float-DataExpiracao').val(dados.DataExpiracao);
+            },
+            error: function (data) {
+                var dados = JSON.parse(data.responseText);
+                console.log(dados);
+                stop();
+            }
+        });
+    } else {
+        $('.title').append("Cadastro");
+        $('.buttonSubmit').append('<button class="btn btn-success one-btn-size" type="submit">Anunciar</button>');
+    }
+}
+
 function carregarClientes() {
     $.ajax({
         method: "GET",

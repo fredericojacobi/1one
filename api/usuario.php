@@ -8,6 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require "./config/Database.php";
 require_once "./Models/Usuario.php";
 require_once "./bll/UsuarioBL.php";
+require_once "./bll/PermissaoBL.php";
 require_once "../generics/Constants.php";
 require_once "../generics/Generics.php";
 
@@ -42,6 +43,14 @@ switch ($method) {
             $postData['senha'],
             isset($postData['ativo']) ? $postData['ativo'] : false
         );
+
+        $permissaoBL = new PermissaoBL($database);
+        $permissoes = $permissaoBL->Read();
+        if($usuario->tipoUsuario == '1')
+            $functions->SetPermission($permissoes, 'Basico', 'Cliente', $usuario);
+        else
+            $functions->SetPermission($permissoes, 'Basico', 'Parceiro', $usuario);
+
         $return = $usuarioBL->Create($usuario);
         if (is_numeric($return)) {
             http_response_code(200);
@@ -61,10 +70,11 @@ switch ($method) {
         if (is_null($postData) || empty($postData)) {
             http_response_code(400);
             echo json_encode(["message" => Constants::REQUEST_NO_BODY, "status" => "0"]);
+            return;
         }
-        if (!isset($postData['id']) || is_null($postData['id'])) {
-            http_response_code(400);
-            echo json_encode(["message" => Constants::REQUEST_NO_ID, "status" => "0"]);
+        if (!$id) {
+            http_response_code(404);
+            echo json_encode(["message" => Constants::REQUEST_USER_NOT_FOUND]);
         }
 
         $usuario = new Usuario(
@@ -80,24 +90,29 @@ switch ($method) {
             $postData['ativo'],
             $postData['verificado']
         );
-        $usuario->id = $postData['id'];
-        $where = "id = {$postData['id']}";
-        $return = $usuarioBL->Update($usuario, $where);
-        if (!$return){
+
+        $usuario->id = $id;
+        $return = $usuarioBL->Update($usuario);
+        if (!$return) {
             http_response_code(500);
             echo json_encode(["message" => Constants::REQUEST_ERROR, "status" => "0"]);
-        }
-        else
+        } else
             http_response_code(200);
         if (!is_bool($return))
-           echo json_encode(["message" => $return, "status" => "0"]);
+            echo json_encode(["message" => $return, "status" => "0"]);
         else
             echo json_encode(["message" => Constants::REQUEST_SUCCESS, "status" => "1"]);
         return $return;
 
     case 'DELETE':
-
-        break;
+        if (!$id) {
+            http_response_code(404);
+            echo json_encode(["message" => Constants::REQUEST_NO_ID, "status" => "0"]);
+            return;
+        }
+        $usuario = new Usuario("", "", "", "", "", "", "", "", "");
+        $usuario->id = $id;
+        return $usuarioBL->Desativar($usuario);
 }
 
 

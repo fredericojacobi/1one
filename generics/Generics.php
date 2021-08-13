@@ -149,7 +149,7 @@ class Generics
         }
     }
 
-    public function PutMethod($url, $usuarioModel)
+    public function PutMethod($url, $model)
     {
         if (empty($url)) {
             return json_encode([
@@ -159,7 +159,7 @@ class Generics
             $curl = curl_init($url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($usuarioModel));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($model));
             curl_setopt($curl, CURLOPT_HTTPHEADER, [
 //                'X-RapidAPI-Host: kvstore.p.rapidapi.com',
 //                'X-RapidAPI-Key: 7xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -168,6 +168,16 @@ class Generics
             $response = curl_exec($curl);
             curl_close($curl);
             return $response;
+        }
+    }
+
+    public function SetPermission(array $permissoes, string $nome, string $categoria, Usuario $usuario)
+    {
+        foreach ($permissoes as $key => $value) {
+            if ($value['Nome'] == $nome && $value['Categoria'] == $categoria) {
+                $usuario->id_permissao = $value['Id'];
+                break;
+            }
         }
     }
 }

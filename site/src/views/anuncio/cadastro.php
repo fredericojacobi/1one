@@ -10,12 +10,11 @@ require "../../../../" . Constants::SITE_HEADER;
 <?php require "../../../../" . Constants::SITE_MENU ?>
 <div class="container-fluid">
     <form id="form-cadastro" class="needs-validation" method="POST" novalidate>
-        <div class="h2 text-center mt-5 title">Titulo</div>
+        <div class="h2 text-center mt-5 title"></div>
         <div class="row justify-content-center">
             <div class="col-6 card bg-light p-3 mt-3">
-                <div class="h5">Subtitulo</div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="float-Titulo" placeholder="Seu titulo aqui..."
                                    required>
@@ -25,7 +24,9 @@ require "../../../../" . Constants::SITE_HEADER;
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="float-DescricaoCurta"
                                    placeholder="Sua descricao curta aqui..." required>
@@ -37,24 +38,18 @@ require "../../../../" . Constants::SITE_HEADER;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="float-DescricaoLonga"
-                                   placeholder="Sua descricao aqui..." required>
-                            <label for="float-DescricaoLonga">Descrição Completa</label>
-                            <div class="invalid-feedback">
-                                Favor inserir a descrição completa.
+                            <div class="form-floating">
+                                <textarea class="form-control"
+                                          placeholder="Seu cpf aqui..."
+                                          id="float-DescricaoLonga"
+                                          style="height: 100px">
+                                </textarea>
+                                <label for="float-DescricaoLonga">Descrição Completa</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="float-ValorDesejado"
-                                   placeholder="Seu cpf aqui..."
-                                   required>
-                            <label for="float-ValorDesejado">Valor Desejado</label>
                             <div class="invalid-feedback">
-                                Favor inserir o valor desejado.
+                                Favor inserir a descrição.
                             </div>
                         </div>
                     </div>
@@ -62,7 +57,18 @@ require "../../../../" . Constants::SITE_HEADER;
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="float-DataExpiracao"
+                            <input type="text" class="form-control" id="float-ValorDesejado"
+                                   placeholder="Seu cpf aqui..."
+                                   required>
+                            <label for="float-ValorDesejado">Valor Sugerido</label>
+                            <div class="invalid-feedback">
+                                Favor inserir o valor sugerido.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="float-DataExpiracao"
                                    placeholder="Sua data de expiração aqui..." required>
                             <label for="float-DataExpiracao">Prazo de Duração do Anúncio</label>
                             <div class="invalid-feedback">
@@ -72,9 +78,7 @@ require "../../../../" . Constants::SITE_HEADER;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-success one-btn-size">Anunciar</button>
-                    </div>
+                    <div class="col-md-12 buttonSubmit text-center"></div>
                 </div>
             </div>
         </div>
@@ -85,6 +89,8 @@ require "../../../../" . Constants::SITE_HEADER;
     $('document').ready(function () {
         var params = pegaQueryString();
         checarEdicaoCadastro(params.id);
+        cadastrarAnuncio(params.id)
+        $('#float-ValorDesejado').mask('000.000,00', {reverse: true});
         /*
                     (function () {
                         'use strict'

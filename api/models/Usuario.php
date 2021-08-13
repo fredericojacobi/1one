@@ -18,7 +18,8 @@ class Usuario extends ObjectBase
         $email,
         $senha,
         $ativo,
-        $permissao;
+        $id_permissao,
+        $id_anexo;
 
 
     public function __construct($nome,

@@ -1,6 +1,7 @@
 <?php
 require "../../../../api/models/Usuario.php";
 require "../../../../generics/Generics.php";
+require "../../../../generics/Constants.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $generics = new Generics();
@@ -25,7 +26,7 @@ switch ($method) {
         );
         if (isset($_POST['SenhaAtual'])) {
             $senhaAtual = hash('sha256', $_POST['SenhaAtual']);
-            $url = Constants::API_URL . "usuario.php?id=" . $_POST['Id'];
+            $url = Constants::API_URL . "usuario.php?id=" . $_POST['Id'] . "&XDEBUG_SESSION_START=11320";
             $return = $generics->GetMethod($url);
             $usuario = json_decode($return);
             $senhaBd = $usuario->Senha;
@@ -44,18 +45,18 @@ switch ($method) {
                 echo $generics->PutMethod($url, $usuarioModel);
             }
         } else {
-            $url = Constants::API_URL . "usuario.php";
+            $url = Constants::API_URL . "usuario.php?XDEBUG_SESSION_START=11320";
             echo $generics->PostMethod($url, $usuarioModel);
         }
         return;
 
     case 'GET':
         if (empty($_GET))
-            $generics->Redirect("/cadastro");
+            $generics->Redirect("/cadastro/cadastro");
         if ($_GET['id'])
-            $url = Constants::API_URL . "usuario.php?id=" . $_GET['id'];
+            $url = Constants::API_URL . "usuario.php?id=" . $_GET['id'] . "&XDEBUG_SESSION_START=11320";
         else
-            $url = Constants::API_URL . "usuario.php";
+            $url = Constants::API_URL . "usuario.php?XDEBUG_SESSION_START=11320";
 
         echo $generics->GetMethod($url);
         return;
